@@ -3,8 +3,6 @@ Part model classes for the Automotive Parts Catalog System.
 This module defines the data structures for representing automotive parts.
 """
 from typing import List, Dict, Set, Optional
-from src.datastructures.array_list import ArrayList
-
 
 class Part:
     """
@@ -212,13 +210,13 @@ class PartCatalog:
         if not category:
             return []
         
-        result = ArrayList[Part]()
+        result = []
         for part_id in category.get_parts():
             part = self.parts.get(part_id)
             if part:
                 result.append(part)
         
-        return result.to_list()
+        return result
     
     def add_category(self, category: PartCategory) -> None:
         """
@@ -251,7 +249,7 @@ class PartCatalog:
         """
         return list(self.categories.values())
     
-    def search_parts(self, query: str) -> ArrayList[Part]:
+    def search_parts(self, query: str) -> List[Part]:
         """
         Search for parts by name or description.
         
@@ -259,10 +257,10 @@ class PartCatalog:
             query: The search query
             
         Returns:
-            An ArrayList of Part objects matching the search query
+            A list of Part objects matching the search query
         """
         query = query.lower()
-        result = ArrayList[Part]()
+        result = []
         
         for part in self.parts.values():
             if (query in part.name.lower() or 
@@ -272,7 +270,7 @@ class PartCatalog:
         
         return result
     
-    def find_compatible_parts(self, make: str, model: str, year: int) -> ArrayList[Part]:
+    def find_compatible_parts(self, make: str, model: str, year: int) -> List[Part]:
         """
         Find all parts compatible with the specified vehicle.
         
@@ -282,9 +280,9 @@ class PartCatalog:
             year: The year of the vehicle
             
         Returns:
-            An ArrayList of Part objects compatible with the vehicle
+            A list of Part objects compatible with the vehicle
         """
-        result = ArrayList[Part]()
+        result = []
         
         for part in self.parts.values():
             if part.is_compatible_with(make, model, year):
