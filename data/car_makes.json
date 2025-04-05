@@ -1,0 +1,110 @@
+[
+  {
+    "id": "toyota",
+    "name": "Toyota",
+    "models": [
+      {
+        "id": "camry",
+        "name": "Camry",
+        "years": [
+          {"year": 2020, "generation": "XV70"},
+          {"year": 2021, "generation": "XV70"},
+          {"year": 2022, "generation": "XV70"},
+          {"year": 2023, "generation": "XV70"}
+        ]
+      },
+      {
+        "id": "corolla",
+        "name": "Corolla",
+        "years": [
+          {"year": 2020, "generation": "E210"},
+          {"year": 2021, "generation": "E210"},
+          {"year": 2022, "generation": "E210"},
+          {"year": 2023, "generation": "E210"}
+        ]
+      },
+      {
+        "id": "rav4",
+        "name": "RAV4",
+        "years": [
+          {"year": 2020, "generation": "XA50"},
+          {"year": 2021, "generation": "XA50"},
+          {"year": 2022, "generation": "XA50"},
+          {"year": 2023, "generation": "XA50"}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "honda",
+    "name": "Honda",
+    "models": [
+      {
+        "id": "civic",
+        "name": "Civic",
+        "years": [
+          {"year": 2020, "generation": "10th"},
+          {"year": 2021, "generation": "10th"},
+          {"year": 2022, "generation": "11th"},
+          {"year": 2023, "generation": "11th"}
+        ]
+      },
+      {
+        "id": "accord",
+        "name": "Accord",
+        "years": [
+          {"year": 2020, "generation": "10th"},
+          {"year": 2021, "generation": "10th"},
+          {"year": 2022, "generation": "10th"},
+          {"year": 2023, "generation": "10th"}
+        ]
+      },
+      {
+        "id": "crv",
+        "name": "CR-V",
+        "years": [
+          {"year": 2020, "generation": "5th"},
+          {"year": 2021, "generation": "5th"},
+          {"year": 2022, "generation": "5th"},
+          {"year": 2023, "generation": "6th"}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ford",
+    "name": "Ford",
+    "models": [
+      {
+        "id": "f150",
+        "name": "F-150",
+        "years": [
+          {"year": 2020, "generation": "13th"},
+          {"year": 2021, "generation": "14th"},
+          {"year": 2022, "generation": "14th"},
+          {"year": 2023, "generation": "14th"}
+        ]
+      },
+      {
+        "id": "mustang",
+        "name": "Mustang",
+        "years": [
+          {"year": 2020, "generation": "6th"},
+          {"year": 2021, "generation": "6th"},
+          {"year": 2022, "generation": "6th"},
+          {"year": 2023, "generation": "6th"}
+        ]
+      },
+      {
+        "id": "escape",
+        "name": "Escape",
+        "years": [
+          {"year": 2020, "generation": "4th"},
+          {"year": 2021, "generation": "4th"},
+          {"year": 2022, "generation": "4th"},
+          {"year": 2023, "generation": "4th"}
+        ]
+      }
+    ]
+  }
+]

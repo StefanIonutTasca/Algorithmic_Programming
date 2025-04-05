@@ -1,0 +1,255 @@
+[
+  {
+    "id": "P001",
+    "name": "Oil Filter",
+    "category": "Engine",
+    "price": 12.99,
+    "manufacturer": "Bosch",
+    "description": "High-quality oil filter that removes contaminants from engine oil.",
+    "specifications": {
+      "filterType": "Spin-on",
+      "height": "3.5 inches",
+      "diameter": "2.75 inches",
+      "threadSize": "3/4-16 UNF",
+      "mediaType": "Synthetic blend"
+    },
+    "compatibleVehicles": [
+      "toyota:camry:2020",
+      "toyota:camry:2021",
+      "toyota:camry:2022",
+      "toyota:corolla:2021",
+      "toyota:corolla:2022",
+      "honda:accord:2020",
+      "honda:accord:2021",
+      "honda:civic:2022"
+    ]
+  },
+  {
+    "id": "P002",
+    "name": "Brake Pads",
+    "category": "Brakes",
+    "price": 45.99,
+    "manufacturer": "Brembo",
+    "description": "High-performance ceramic brake pads for improved stopping power and reduced brake dust.",
+    "specifications": {
+      "material": "Ceramic",
+      "position": "Front",
+      "thickness": "0.5 inches",
+      "width": "3.5 inches",
+      "length": "4.7 inches",
+      "wearIndicator": "Yes"
+    },
+    "compatibleVehicles": [
+      "toyota:camry:2020",
+      "toyota:camry:2021",
+      "toyota:corolla:2020",
+      "honda:civic:2020",
+      "honda:civic:2021",
+      "ford:mustang:2021",
+      "ford:mustang:2022"
+    ]
+  },
+  {
+    "id": "P003",
+    "name": "Air Filter",
+    "category": "Engine",
+    "price": 18.50,
+    "manufacturer": "K&N",
+    "description": "Reusable high-flow air filter that improves engine performance and fuel economy.",
+    "specifications": {
+      "filterType": "Panel",
+      "height": "1.625 inches",
+      "length": "10 inches",
+      "width": "7 inches",
+      "material": "Cotton gauze",
+      "washable": "Yes"
+    },
+    "compatibleVehicles": [
+      "toyota:camry:2021",
+      "toyota:camry:2022",
+      "toyota:rav4:2020",
+      "toyota:rav4:2021",
+      "honda:crv:2020",
+      "honda:crv:2021",
+      "ford:escape:2022",
+      "ford:escape:2023"
+    ]
+  },
+  {
+    "id": "P004",
+    "name": "Spark Plugs",
+    "category": "Ignition",
+    "price": 8.99,
+    "manufacturer": "NGK",
+    "description": "Iridium spark plugs offering better ignitability, improved combustion and longer life.",
+    "specifications": {
+      "type": "Iridium",
+      "gapSize": "0.044 inches",
+      "threadSize": "14mm",
+      "threadReach": "19mm",
+      "heatRange": "5",
+      "terminationType": "Solid"
+    },
+    "compatibleVehicles": [
+      "toyota:camry:2020",
+      "toyota:camry:2021",
+      "toyota:corolla:2021",
+      "toyota:corolla:2022",
+      "honda:civic:2020",
+      "honda:civic:2021",
+      "honda:accord:2022",
+      "ford:mustang:2021"
+    ]
+  },
+  {
+    "id": "P005",
+    "name": "Cabin Air Filter",
+    "category": "HVAC",
+    "price": 15.75,
+    "manufacturer": "Fram",
+    "description": "Helps remove dust, pollen, and other airborne contaminants from the air entering the vehicle's cabin.",
+    "specifications": {
+      "filterType": "Particulate",
+      "material": "Nonwoven fabric",
+      "carbonLayered": "Yes",
+      "height": "1.5 inches",
+      "length": "9.75 inches",
+      "width": "7.8 inches"
+    },
+    "compatibleVehicles": [
+      "toyota:camry:2021",
+      "toyota:camry:2022",
+      "toyota:rav4:2021",
+      "toyota:rav4:2022",
+      "honda:accord:2021",
+      "honda:accord:2022",
+      "honda:crv:2022",
+      "ford:escape:2022"
+    ]
+  },
+  {
+    "id": "P006",
+    "name": "Alternator",
+    "category": "Electrical",
+    "price": 189.99,
+    "manufacturer": "Denso",
+    "description": "High-output alternator for reliable electrical power generation.",
+    "specifications": {
+      "voltage": "12V",
+      "amperage": "130A",
+      "pulleyType": "Serpentine",
+      "mountingPattern": "Standard",
+      "regulator": "Internal",
+      "clockDirection": "Clockwise"
+    },
+    "compatibleVehicles": [
+      "toyota:camry:2020",
+      "toyota:camry:2021",
+      "honda:accord:2020",
+      "honda:accord:2021",
+      "ford:mustang:2020",
+      "ford:mustang:2021",
+      "ford:f150:2021"
+    ]
+  },
+  {
+    "id": "P007",
+    "name": "Radiator",
+    "category": "Cooling",
+    "price": 125.50,
+    "manufacturer": "Koyo",
+    "description": "High-efficiency radiator with optimized cooling performance.",
+    "specifications": {
+      "material": "Aluminum",
+      "rows": "2",
+      "coreSize": "26 x 17 inches",
+      "transmission": "Automatic",
+      "inletSize": "1.25 inches",
+      "outletSize": "1.5 inches"
+    },
+    "compatibleVehicles": [
+      "toyota:camry:2021",
+      "toyota:camry:2022",
+      "toyota:rav4:2021",
+      "honda:accord:2021",
+      "honda:civic:2022",
+      "ford:mustang:2021",
+      "ford:f150:2022"
+    ]
+  },
+  {
+    "id": "P008",
+    "name": "Fuel Pump",
+    "category": "Fuel System",
+    "price": 149.99,
+    "manufacturer": "Delphi",
+    "description": "Electric fuel pump that delivers consistent fuel pressure for optimal engine performance.",
+    "specifications": {
+      "type": "In-tank",
+      "voltage": "12V",
+      "pressure": "58 PSI",
+      "flowRate": "255 LPH",
+      "includesStrainer": "Yes",
+      "includesGasket": "Yes"
+    },
+    "compatibleVehicles": [
+      "toyota:camry:2020",
+      "toyota:camry:2021",
+      "toyota:corolla:2021",
+      "honda:civic:2020",
+      "honda:civic:2021",
+      "ford:escape:2021",
+      "ford:f150:2022"
+    ]
+  },
+  {
+    "id": "P009",
+    "name": "Oxygen Sensor",
+    "category": "Exhaust",
+    "price": 79.99,
+    "manufacturer": "Bosch",
+    "description": "Monitors the oxygen content in the exhaust gases for optimal fuel mixture and emissions control.",
+    "specifications": {
+      "sensorType": "Heated",
+      "wireCount": "4",
+      "position": "Upstream",
+      "threadSize": "18mm x 1.5",
+      "sensorLength": "4.5 inches",
+      "connectorType": "Weather Pack"
+    },
+    "compatibleVehicles": [
+      "toyota:camry:2021",
+      "toyota:corolla:2022",
+      "toyota:rav4:2021",
+      "honda:accord:2022",
+      "honda:civic:2021",
+      "ford:mustang:2022",
+      "ford:escape:2022"
+    ]
+  },
+  {
+    "id": "P010",
+    "name": "Control Arm",
+    "category": "Suspension",
+    "price": 89.95,
+    "manufacturer": "Moog",
+    "description": "Precision-engineered control arm for improved handling and stability.",
+    "specifications": {
+      "position": "Front Lower",
+      "side": "Driver",
+      "material": "Steel",
+      "bushingMaterial": "Polyurethane",
+      "ballJointIncluded": "Yes",
+      "adjustable": "No"
+    },
+    "compatibleVehicles": [
+      "toyota:camry:2020",
+      "toyota:camry:2021",
+      "honda:accord:2020",
+      "honda:accord:2021",
+      "ford:mustang:2021",
+      "ford:f150:2020",
+      "ford:f150:2021"
+    ]
+  }
+]
