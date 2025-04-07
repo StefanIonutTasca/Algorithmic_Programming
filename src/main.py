@@ -3,6 +3,7 @@
 Automotive Parts Catalog System
 Main entry point for the application
 """
+from gui.main_window import MainWindow
 
 def main():
     """
@@ -10,7 +11,10 @@ def main():
     """
     print("Automotive Parts Catalog System")
     print("Starting application...")
-    # Will be implemented as the project progresses
+    
+    # Create and start the main application window
+    app = MainWindow()
+    app.mainloop()
 
 if __name__ == "__main__":
     main()
