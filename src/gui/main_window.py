@@ -207,3 +207,6 @@ class MainWindow:
         
         # Switch to the performance tab
         self._notebook.select(1)  # Select the performance tab
+        
+        # Update status bar with demo info
+        self._status_var.set(f"Running {algorithm_name} demo with {data_size} items")

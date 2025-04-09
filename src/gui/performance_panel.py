@@ -58,10 +58,32 @@ class PerformancePanel(ttk.Frame):
         results_frame = ttk.LabelFrame(self, text="Results")
         results_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
+        # Create a frame for the chart
+        chart_frame = ttk.Frame(results_frame)
+        chart_frame.pack(fill=tk.BOTH, expand=True, pady=5)
+        
         # Create a canvas for the chart
         self._fig, self._ax = plt.subplots(figsize=(8, 4))
-        self._canvas = FigureCanvasTkAgg(self._fig, master=results_frame)
+        self._canvas = FigureCanvasTkAgg(self._fig, master=chart_frame)
         self._canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        
+        # Create a frame for the results table
+        table_frame = ttk.Frame(results_frame)
+        table_frame.pack(fill=tk.BOTH, padx=5, pady=5)
+        
+        # Create the results table
+        self._results_tree = ttk.Treeview(table_frame, columns=("Algorithm", "Found At", "Time", "Speedup"), show="headings")
+        self._results_tree.heading("Algorithm", text="Algorithm")
+        self._results_tree.heading("Found At", text="Found At Index")
+        self._results_tree.heading("Time", text="Time (seconds)")
+        self._results_tree.heading("Speedup", text="Speedup Factor")
+        
+        self._results_tree.column("Algorithm", width=100)
+        self._results_tree.column("Found At", width=100)
+        self._results_tree.column("Time", width=100)
+        self._results_tree.column("Speedup", width=100)
+        
+        self._results_tree.pack(fill=tk.BOTH, expand=True)
         
         # Initialize with an empty chart
         self._ax.set_title("Algorithm Performance Comparison")
@@ -125,8 +147,9 @@ class PerformancePanel(ttk.Frame):
             end_time = time.time()
             results["Binary Search"] = (index, end_time - start_time)
         
-        # Update the chart
+        # Update the chart and results table
         self._update_chart(results, algorithm_name, data_size, target)
+        self._update_results_table(results)
     
     def _update_chart(self, results: Dict[str, Tuple[int, float]], algorithm_name: str, 
                       data_size: int, target: int) -> None:
@@ -146,8 +169,9 @@ class PerformancePanel(ttk.Frame):
         algorithms = list(results.keys())
         times = [results[alg][1] for alg in algorithms]
         
-        # Create a bar chart
-        bars = self._ax.bar(algorithms, times)
+        # Create a bar chart with custom colors
+        colors = ['#3498db', '#e74c3c'] if len(algorithms) > 1 else ['#3498db']
+        bars = self._ax.bar(algorithms, times, color=colors)
         
         # Add labels
         for bar in bars:
@@ -155,8 +179,9 @@ class PerformancePanel(ttk.Frame):
             self._ax.text(
                 bar.get_x() + bar.get_width() / 2,
                 height + 0.0001,
-                f"{height:.4f}",
-                ha="center"
+                f"{height:.6f}",
+                ha="center",
+                fontsize=9
             )
         
         # Add titles and labels
@@ -168,6 +193,14 @@ class PerformancePanel(ttk.Frame):
         self._ax.set_xlabel("Algorithm")
         self._ax.set_ylabel("Execution Time (seconds)")
         
+        # Set y-axis to logarithmic if the times are very different
+        if len(times) > 1 and max(times) / min(times) > 100:
+            self._ax.set_yscale('log')
+            self._ax.set_ylabel("Execution Time (seconds) - Log Scale")
+        
+        # Add a grid for better readability
+        self._ax.grid(True, linestyle='--', alpha=0.7)
+        
         # Update the chart
         self._fig.tight_layout()
         self._canvas.draw()
@@ -178,3 +211,29 @@ class PerformancePanel(ttk.Frame):
         print(f"Target Value: {target}")
         for alg, (index, time_taken) in results.items():
             print(f"{alg}: Found at index {index}, Time: {time_taken:.6f} seconds")
+    
+    def _update_results_table(self, results: Dict[str, Tuple[int, float]]) -> None:
+        """
+        Update the results table with algorithm performance data.
+        
+        Args:
+            results: Dictionary of algorithm results (algorithm -> (index, time))
+        """
+        # Clear existing entries
+        for item in self._results_tree.get_children():
+            self._results_tree.delete(item)
+        
+        # Calculate speedup factor if comparing both algorithms
+        speedup = 1.0
+        if len(results) > 1 and "Linear Search" in results and "Binary Search" in results:
+            linear_time = results["Linear Search"][1]
+            binary_time = results["Binary Search"][1]
+            if binary_time > 0:
+                speedup = linear_time / binary_time
+        
+        # Add new entries
+        for alg, (index, time_taken) in results.items():
+            if alg == "Binary Search" and len(results) > 1:
+                self._results_tree.insert("", tk.END, values=(alg, index, f"{time_taken:.6f}", f"{speedup:.2f}x"))
+            else:
+                self._results_tree.insert("", tk.END, values=(alg, index, f"{time_taken:.6f}", "1.00x"))
