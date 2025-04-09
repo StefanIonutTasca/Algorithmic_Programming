@@ -8,13 +8,13 @@ import os
 import json
 from typing import Dict, List, Any, Optional
 
-from ..datastructures.binary_search_tree import BinarySearchTree
-from ..models.vehicle_models import CarMake, CarModel, ModelYear
-from ..models.part import Part
-from .search_panel import SearchPanel
-from .results_panel import ResultsPanel
-from .part_detail_panel import PartDetailPanel
-from .performance_panel import PerformancePanel
+from src.datastructures.BinarySearchTree import BinarySearchTree
+from src.models.vehicle_models import CarMake, CarModel, ModelYear
+from src.models.part import Part
+from src.gui.search_panel import SearchPanel
+from src.gui.results_panel import ResultsPanel
+from src.gui.part_detail_panel import PartDetailPanel
+from src.gui.performance_panel import PerformancePanel
 
 
 class MainWindow:
