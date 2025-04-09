@@ -3,7 +3,7 @@ Search panel for the Automotive Parts Catalog System.
 This module provides the user interface for searching parts by vehicle.
 """
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 from typing import List, Callable, Optional
 
 from ..models.vehicle_models import CarMake, CarModel, ModelYear
@@ -70,8 +70,10 @@ class SearchPanel(ttk.Frame):
                                            "Electrical", "Body", "Interior", "Accessories"]
         
         # Create the search button
-        search_button = ttk.Button(criteria_frame, text="Search", command=self._on_search)
-        search_button.grid(row=4, column=0, columnspan=2, pady=10)
+        self._search_button = ttk.Button(criteria_frame, text="Search")
+        self._search_button.grid(row=4, column=0, columnspan=2, pady=10)
+        # Bind the button click using the bind method instead of command
+        self._search_button.bind("<Button-1>", self._button_clicked)
         
         # Configure grid weights
         for i in range(5):
@@ -200,14 +202,84 @@ class SearchPanel(ttk.Frame):
             # Invalid year value
             self._selected_year = None
     
+    def _button_clicked(self, event):
+        """
+        Direct event handler for the button click
+        """
+        print("Button clicked via direct event binding")
+        try:
+            # Skip the messagebox for now as it might be causing issues
+            # Get direct references to the search parameters
+            make_id = self._selected_make.get_id() if self._selected_make else ""
+            model_id = self._selected_model.get_id() if self._selected_model else ""
+            year = self._selected_year.get_year() if self._selected_year else 0
+            category = self._category_var.get()
+            
+            print(f"Search parameters: make_id={make_id}, model_id={model_id}, year={year}, category={category}")
+            
+            # Call the search callback directly
+            if self._search_callback:
+                print("Calling search callback directly")
+                self._search_callback(make_id, model_id, year, category)
+            else:
+                print("Error: search_callback is not set")
+        except Exception as e:
+            print(f"Error in button click event: {type(e).__name__}: {e}")
+            import traceback
+            traceback.print_exc()
+    
     def _on_search(self) -> None:
         """
         Handle the search button click.
         """
-        make_id = self._selected_make.get_id() if self._selected_make else ""
-        model_id = self._selected_model.get_id() if self._selected_model else ""
-        year = self._selected_year.get_year() if self._selected_year else 0
-        category = self._category_var.get()
+        # Show immediate feedback that the button was clicked
         
-        # Call the search callback with the selected criteria
-        self._search_callback(make_id, model_id, year, category)
+        try:
+            print("Search button clicked")
+            
+            # Get make ID safely
+            make_id = ""
+            if self._selected_make:
+                try:
+                    make_id = self._selected_make.get_id()
+                    print(f"Selected make: {self._selected_make.get_name()} (ID: {make_id})")
+                except Exception as e:
+                    print(f"Error getting make ID: {e}")
+                    messagebox.showerror("Make Error", f"Error getting make ID: {e}")
+                    
+            # Get model ID safely
+            model_id = ""
+            if self._selected_model:
+                try:
+                    model_id = self._selected_model.get_id()
+                    print(f"Selected model: {self._selected_model.get_name()} (ID: {model_id})")
+                except Exception as e:
+                    print(f"Error getting model ID: {e}")
+                    messagebox.showerror("Model Error", f"Error getting model ID: {e}")
+            
+            # Get year safely
+            year = 0
+            if self._selected_year:
+                try:
+                    year = self._selected_year.get_year()
+                    print(f"Selected year: {year}")
+                except Exception as e:
+                    print(f"Error getting year: {e}")
+                    messagebox.showerror("Year Error", f"Error getting year: {e}")
+            
+            # Get category
+            category = self._category_var.get()
+            print(f"Selected category: {category}")
+            
+            # Check if at least make is selected
+            if not make_id:
+                messagebox.showinfo("Selection Required", "Please select a car make")
+                return
+            
+            # Call the search callback with the selected criteria
+            print(f"Calling search callback with: make_id={make_id}, model_id={model_id}, year={year}, category={category}")
+            self._search_callback(make_id, model_id, year, category)
+            
+        except Exception as e:
+            print(f"Error in search panel _on_search: {e}")
+            messagebox.showerror("Search Error", f"An error occurred: {e}")

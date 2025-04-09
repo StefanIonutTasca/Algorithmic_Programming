@@ -135,38 +135,13 @@ class MainWindow:
         Args:
             makes_data: List of car make dictionaries
         """
-        # Create a binary search tree with a custom comparator that safely handles various types
-        def safe_comparator(a, b):
-            # Safety check for object types
-            if not hasattr(a, 'get_name') or not hasattr(b, 'get_name'):
-                # If we have lists or other non-CarMake objects, compare string representation
-                str_a = str(a)
-                str_b = str(b)
-                return -1 if str_a < str_b else (1 if str_a > str_b else 0)
-            
-            # Normal comparison for CarMake objects
-            return -1 if a.get_name() < b.get_name() else (1 if a.get_name() > b.get_name() else 0)
-            
-        self._makes_tree = BinarySearchTree(safe_comparator)
+        # Create a binary search tree with a custom comparator
+        self._makes_tree = BinarySearchTree(lambda a, b: -1 if a.get_name() < b.get_name() else (1 if a.get_name() > b.get_name() else 0))
         
-        # Add each make to the tree, with error handling
+        # Add each make to the tree
         for make_data in makes_data:
-            try:
-                # Ensure we're working with a dictionary
-                if isinstance(make_data, dict):
-                    make = CarMake.from_dict(make_data)
-                    if hasattr(make, 'get_name'):  # Verify it's a proper CarMake
-                        self._makes_tree.insert(make)
-                elif isinstance(make_data, list) and make_data:
-                    # If we got a list instead of a dict, try to process its first element
-                    print(f"Warning: Expected dict but got list in makes_data. Attempting to process first element.")
-                    if isinstance(make_data[0], dict):
-                        make = CarMake.from_dict(make_data[0])
-                        if hasattr(make, 'get_name'):
-                            self._makes_tree.insert(make)
-            except Exception as e:
-                print(f"Error processing car make data: {e}")
-                continue  # Skip this item and continue with others
+            make = CarMake.from_dict(make_data)
+            self._makes_tree.insert(make)
     
     def _load_parts(self, parts_data: List[Dict[str, Any]]) -> None:
         """
@@ -176,22 +151,8 @@ class MainWindow:
             parts_data: List of part dictionaries
         """
         for part_data in parts_data:
-            try:
-                # Ensure we're working with a dictionary
-                if isinstance(part_data, dict):
-                    part = Part.from_dict(part_data)
-                    if hasattr(part, 'get_id'):  # Verify it's a proper Part object
-                        self._parts_by_id[part.get_id()] = part
-                elif isinstance(part_data, list) and part_data:
-                    # If we got a list instead of a dict, try to process its first element
-                    print(f"Warning: Expected dict but got list in parts_data. Attempting to process first element.")
-                    if isinstance(part_data[0], dict):
-                        part = Part.from_dict(part_data[0])
-                        if hasattr(part, 'get_id'):
-                            self._parts_by_id[part.get_id()] = part
-            except Exception as e:
-                print(f"Error processing part data: {e}")
-                continue  # Skip this item and continue with others
+            part = Part.from_dict(part_data)
+            self._parts_by_id[part.get_id()] = part
     
     def _on_search(self, make_id: str, model_id: str, year: int, part_category: str) -> None:
         """
@@ -203,44 +164,16 @@ class MainWindow:
             year: Selected year
             part_category: Selected part category
         """
-        print(f"Search triggered with: make_id={make_id}, model_id={model_id}, year={year}, category={part_category}")
-        
         if not make_id:
             messagebox.showinfo("Selection Required", "Please select a car make")
             return
         
         # Find compatible parts
         compatible_parts = []
-        print(f"Number of parts to check: {len(self._parts_by_id)}")
-        
-        try:
-            for part_id, part in self._parts_by_id.items():
-                try:
-                    is_category_match = part_category == "" or part.get_category() == part_category
-                    is_compatible = False
-                    
-                    if not model_id:
-                        is_compatible = True  # If no model selected, don't filter by compatibility
-                    else:
-                        try:
-                            is_compatible = part.is_compatible_with(make_id, model_id, year)
-                        except Exception as e:
-                            print(f"Error checking compatibility for part {part_id}: {e}")
-                            is_compatible = False
-                            
-                    if is_category_match and is_compatible:
-                        compatible_parts.append(part)
-                        
-                except Exception as e:
-                    print(f"Error processing part {part_id}: {e}")
-                    continue
-                    
-        except Exception as e:
-            print(f"Error in search process: {e}")
-            messagebox.showerror("Search Error", f"An error occurred during search: {e}")
-            return
-        
-        print(f"Found {len(compatible_parts)} compatible parts")
+        for part in self._parts_by_id.values():
+            if (part_category == "" or part.get_category() == part_category) and \
+               (not model_id or part.is_compatible_with(make_id, model_id, year)):
+                compatible_parts.append(part)
         
         # Update the results panel
         self._results_panel.set_parts(compatible_parts)

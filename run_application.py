@@ -1,12 +1,39 @@
 #!/usr/bin/env python3
 """
 Automotive Parts Catalog System Launcher
-This script provides a convenient way to launch the application
+This script provides a convenient way to launch the application with proper error handling
 """
 
 import os
 import sys
+import traceback
 import tkinter as tk
+from tkinter import messagebox
+
+# Enhanced error handling
+def show_error(exc_type, exc_value, exc_traceback):
+    """
+    Global exception handler to capture and display uncaught exceptions
+    """
+    print("*** Uncaught Exception ***")
+    print("Type:", exc_type)
+    print("Value:", exc_value)
+    traceback.print_tb(exc_traceback)
+    # Re-raise to standard handler
+    sys.__excepthook__(exc_type, exc_value, exc_traceback)
+
+# Set up the global exception handler
+sys.excepthook = show_error
+
+def report_callback_exception(exc, val, tb):
+    """
+    Handler for Tkinter widget callback exceptions
+    """
+    print("\n*** Tkinter Callback Exception ***")
+    print("Type:", exc)
+    print("Value:", val)
+    traceback.print_tb(tb)
+    messagebox.showerror("Application Error", f"An unexpected error occurred:\n{val}")
 
 def main():
     """
@@ -30,37 +57,52 @@ def main():
     car_makes_path = os.path.join(data_dir, 'car_makes.json')
     parts_path = os.path.join(data_dir, 'parts.json')
     
-    if os.path.exists(car_makes_path):
-        print(f"Found car makes data at {car_makes_path}")
-    else:
-        print(f"Warning: Car makes data not found at {car_makes_path}")
+    missing_files = []
+    if not os.path.exists(car_makes_path):
+        missing_files.append("car_makes.json")
+    if not os.path.exists(parts_path):
+        missing_files.append("parts.json")
     
-    if os.path.exists(parts_path):
-        print(f"Found parts data at {parts_path}")
-    else:
-        print(f"Warning: Parts data not found at {parts_path}")
-    
-    # Run the application
-    print("Starting the Automotive Parts Catalog System...")
-    
-    # Import the required modules here to ensure paths are set up correctly
+    # Initialize the Tkinter application
     try:
-        # Create the Tkinter root window
+        print("Starting Automotive Parts Catalog System...")
         root = tk.Tk()
         root.title("Automotive Parts Catalog System")
         root.geometry("1000x700")
         root.minsize(800, 600)
         
-        # Import the MainWindow class
-        from src.gui.main_window import MainWindow
+        # Set up Tkinter exception handling
+        root.report_callback_exception = report_callback_exception
         
-        # Create and run the main window
-        app = MainWindow(root)
-        root.mainloop()
+        # If data files are missing, show a warning but continue
+        if missing_files:
+            missing_list = ", ".join(missing_files)
+            warning_message = f"Warning: The following data files are missing:\n{missing_list}\n\nThe application may not function correctly."
+            print(warning_message)
+            messagebox.showwarning("Missing Data Files", warning_message)
+        
+        try:
+            # Import here to ensure path is set up correctly
+            from src.gui.main_window import MainWindow
+            
+            # Create and run the main application
+            app = MainWindow(root)
+            root.mainloop()
+        except Exception as e:
+            error_message = f"Error initializing application: {str(e)}"
+            print(error_message)
+            traceback.print_exc()
+            messagebox.showerror("Initialization Error", error_message)
+            
     except Exception as e:
-        print(f"Error starting application: {e}")
-        import traceback
+        print(f"Critical Error: {str(e)}")
         traceback.print_exc()
+        # Try to show a message box if possible
+        try:
+            messagebox.showerror("Critical Error", f"A critical error occurred:\n{str(e)}")
+        except:
+            print("Could not display error dialog. Application will exit.")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
