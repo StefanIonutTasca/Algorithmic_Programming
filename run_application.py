@@ -7,7 +7,6 @@ This script provides a convenient way to launch the application
 import os
 import sys
 import tkinter as tk
-from importlib import import_module
 
 def main():
     """
@@ -17,8 +16,9 @@ def main():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     src_dir = os.path.join(current_dir, 'src')
     
-    # Add the src directory to the Python path
-    sys.path.insert(0, current_dir)
+    # Add the project directory to the Python path
+    if current_dir not in sys.path:
+        sys.path.insert(0, current_dir)
     
     # Ensure data directory exists
     data_dir = os.path.join(current_dir, 'data')
@@ -43,18 +43,24 @@ def main():
     # Run the application
     print("Starting the Automotive Parts Catalog System...")
     
-    # Create the Tkinter root window
-    root = tk.Tk()
-    root.title("Automotive Parts Catalog System")
-    root.geometry("1000x700")
-    root.minsize(800, 600)
-    
-    # Import the main window class
-    from src.gui.main_window import MainWindow
-    
-    # Create and run the main window
-    app = MainWindow(root)
-    root.mainloop()
+    # Import the required modules here to ensure paths are set up correctly
+    try:
+        # Create the Tkinter root window
+        root = tk.Tk()
+        root.title("Automotive Parts Catalog System")
+        root.geometry("1000x700")
+        root.minsize(800, 600)
+        
+        # Import the MainWindow class
+        from src.gui.main_window import MainWindow
+        
+        # Create and run the main window
+        app = MainWindow(root)
+        root.mainloop()
+    except Exception as e:
+        print(f"Error starting application: {e}")
+        import traceback
+        traceback.print_exc()
 
 if __name__ == "__main__":
     main()

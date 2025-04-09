@@ -3,7 +3,7 @@ BinarySearchTree implementation for the Automotive Parts Catalog System.
 This data structure provides hierarchical storage with efficient search capabilities.
 """
 from typing import TypeVar, Generic, Optional, Callable, List, Any
-from .node import Node
+from src.datastructures.node import Node
 
 T = TypeVar('T')  # Generic type for the BinarySearchTree
 
