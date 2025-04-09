@@ -53,9 +53,9 @@ class MainWindow:
         self._search_frame = ttk.Frame(self._notebook)
         self._notebook.add(self._search_frame, text="Search Parts")
         
-        # Create the performance tab
+        # Create the performance tab with a more descriptive name
         self._performance_frame = ttk.Frame(self._notebook)
-        self._notebook.add(self._performance_frame, text="Performance Metrics")
+        self._notebook.add(self._performance_frame, text="Algorithm & Data Structure Performance")
         
         # Initialize the panels
         self._search_panel = SearchPanel(self._search_frame, self._on_search)
@@ -75,7 +75,17 @@ class MainWindow:
         self._results_detail_paned.add(self._results_panel, weight=1)
         self._results_detail_paned.add(self._part_detail_panel, weight=1)
         
-        # Initialize the performance panel
+        # Add a button frame at the bottom of the search tab for quick access to performance metrics
+        self._button_frame = ttk.Frame(self._search_frame)
+        self._button_frame.pack(fill=tk.X, padx=5, pady=5)
+        
+        ttk.Button(
+            self._button_frame,
+            text="View Algorithm Performance",
+            command=lambda: self._notebook.select(1)  # Select the performance tab
+        ).pack(side=tk.RIGHT, padx=5, pady=5)
+        
+        # Initialize the performance panel with our enhanced implementation
         self._performance_panel = PerformancePanel(self._performance_frame)
         self._performance_panel.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         

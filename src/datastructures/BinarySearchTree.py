@@ -4,28 +4,31 @@ Binary Search Tree implementation
 Date: March 17, 2025
 """
 
+from typing import TypeVar, Generic, Optional, Callable, List, Any
 from .Node import Node
 import time
 
-class BinarySearchTree:
+T = TypeVar('T')  # Generic type for the tree elements
+
+class BinarySearchTree(Generic[T]):
     """
     Binary Search Tree implementation
     Supports insertion, deletion, search, and traversal operations
     """
 
-    def __init__(self, comparator=None):
+    def __init__(self, comparator: Optional[Callable[[T, T], int]] = None):
         """
         Initialize an empty binary search tree
         
         Args:
             comparator: Optional custom comparison function for the data
         """
-        self.root = None
-        self.size = 0
+        self.root: Optional[Node[T]] = None
+        self.size: int = 0
         # Use custom comparator if provided, otherwise use default comparison
-        self.comparator = comparator if comparator else lambda x, y: (x > y) - (x < y)
+        self.comparator: Callable[[T, T], int] = comparator if comparator else lambda x, y: (x > y) - (x < y)
         
-    def __len__(self):
+    def __len__(self) -> int:
         """
         Get the number of nodes in the tree
         
@@ -34,7 +37,7 @@ class BinarySearchTree:
         """
         return self.size
     
-    def insert(self, data):
+    def insert(self, data: T) -> bool:
         """
         Insert data into the binary search tree
         
@@ -50,11 +53,15 @@ class BinarySearchTree:
         if self.root is None:
             self.root = Node(data)
             self.size += 1
-            return True, time.time() - start_time
+            # End performance measurement
+            end_time = time.time()
+            print(f"Insert operation took {end_time - start_time:.6f} seconds")
+            return True
         
-        return self._insert_recursive(self.root, data, start_time)
+        result, _ = self._insert_recursive(self.root, data, start_time)
+        return result
     
-    def _insert_recursive(self, current, data, start_time):
+    def _insert_recursive(self, current: Node[T], data: T, start_time: float) -> tuple[bool, float]:
         """
         Helper method to recursively insert data into the tree
         
@@ -90,7 +97,7 @@ class BinarySearchTree:
                 return True, time.time() - start_time
             return self._insert_recursive(current.right, data, start_time)
     
-    def search(self, data):
+    def search(self, data: T) -> bool:
         """
         Search for data in the binary search tree
         
@@ -98,18 +105,21 @@ class BinarySearchTree:
             data: The data to search for
             
         Returns:
-            bool: True if data is found, False otherwise
-            float: Time taken for the operation
+            bool: True if data exists in the tree, False otherwise
         """
         # Start performance measurement
         start_time = time.time()
         
         if self.root is None:
-            return False, time.time() - start_time
+            # End performance measurement
+            end_time = time.time()
+            print(f"Search operation took {end_time - start_time:.6f} seconds")
+            return False
         
-        return self._search_recursive(self.root, data, start_time)
+        result, _ = self._search_recursive(self.root, data, start_time)
+        return result
     
-    def _search_recursive(self, current, data, start_time):
+    def _search_recursive(self, current: Node[T], data: T, start_time: float) -> tuple[bool, float]:
         """
         Helper method to recursively search for data in the tree
         
@@ -140,7 +150,7 @@ class BinarySearchTree:
         else:
             return self._search_recursive(current.right, data, start_time)
     
-    def delete(self, data):
+    def delete(self, data: T) -> bool:
         """
         Delete data from the binary search tree
         
@@ -148,21 +158,23 @@ class BinarySearchTree:
             data: The data to delete
             
         Returns:
-            bool: True if deletion was successful, False if data not found
-            float: Time taken for the operation
+            bool: True if data was found and deleted, False otherwise
         """
         # Start performance measurement
         start_time = time.time()
         
         if self.root is None:
-            return False, time.time() - start_time
+            # End performance measurement
+            duration = time.time() - start_time
+            print(f"Delete operation took {duration:.6f} seconds")
+            return False
         
-        result, self.root, duration = self._delete_recursive(self.root, data, start_time)
+        result, self.root, _ = self._delete_recursive(self.root, data, start_time)
         if result:
             self.size -= 1
-        return result, duration
+        return result
     
-    def _delete_recursive(self, current, data, start_time):
+    def _delete_recursive(self, current: Node[T], data: T, start_time: float) -> tuple[bool, Node[T], float]:
         """
         Helper method to recursively delete data from the tree
         
@@ -212,7 +224,7 @@ class BinarySearchTree:
                 result, current.right, duration = self._delete_recursive(current.right, successor.data, start_time)
                 return result, current, duration
     
-    def _find_min(self, node):
+    def _find_min(self, node: Node[T]) -> Node[T]:
         """
         Find the node with the minimum value in the subtree rooted at node
         
@@ -227,7 +239,7 @@ class BinarySearchTree:
             current = current.left
         return current
     
-    def inorder_traversal(self):
+    def inorder_traversal(self) -> tuple[List[T], float]:
         """
         Perform an inorder traversal of the tree
         
@@ -242,7 +254,7 @@ class BinarySearchTree:
         self._inorder_recursive(self.root, result)
         return result, time.time() - start_time
     
-    def _inorder_recursive(self, node, result):
+    def _inorder_recursive(self, node: Node[T], result: List[T]) -> None:
         """
         Helper method for inorder traversal
         
@@ -255,7 +267,7 @@ class BinarySearchTree:
             result.append(node.data)
             self._inorder_recursive(node.right, result)
     
-    def get_height(self):
+    def get_height(self) -> int:
         """
         Get the height of the tree
         
@@ -264,7 +276,7 @@ class BinarySearchTree:
         """
         return self._height_recursive(self.root)
     
-    def _height_recursive(self, node):
+    def _height_recursive(self, node: Node[T]) -> int:
         """
         Helper method to calculate the height recursively
         
@@ -282,7 +294,7 @@ class BinarySearchTree:
         
         return max(left_height, right_height) + 1
     
-    def to_list(self):
+    def to_list(self) -> List[T]:
         """
         Convert the tree to a list in sorted order
         
@@ -292,7 +304,7 @@ class BinarySearchTree:
         result, _ = self.inorder_traversal()
         return result
     
-    def is_empty(self):
+    def is_empty(self) -> bool:
         """
         Check if the tree is empty
         
