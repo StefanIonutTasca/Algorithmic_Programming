@@ -79,9 +79,6 @@ class MainWindow:
         self._performance_panel = PerformancePanel(self._performance_frame)
         self._performance_panel.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
-        # Load initial data
-        self._load_data()
-        
         # Set up the status bar
         self._status_var = tk.StringVar()
         self._status_bar = ttk.Label(
@@ -92,6 +89,9 @@ class MainWindow:
         )
         self._status_bar.pack(side=tk.BOTTOM, fill=tk.X)
         self._status_var.set("Ready")
+        
+        # Load initial data
+        self._load_data()
     
     def _load_data(self) -> None:
         """
@@ -103,8 +103,8 @@ class MainWindow:
             # Get the base directory for data files
             base_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
             
-            # Load makes data
-            makes_path = os.path.join(base_dir, "makes.json")
+            # Load makes data - fixed filename to match car_makes.json
+            makes_path = os.path.join(base_dir, "car_makes.json")
             if os.path.exists(makes_path):
                 with open(makes_path, 'r') as file:
                     makes_data = json.load(file)
