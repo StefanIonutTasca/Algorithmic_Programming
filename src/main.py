@@ -3,7 +3,7 @@
 Automotive Parts Catalog System
 Main entry point for the application
 """
-from .gui.main_window import MainWindow
+from src.gui.main_window import MainWindow
 import tkinter as tk
 
 def main():
