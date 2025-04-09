@@ -19,7 +19,28 @@ def main():
     # Add the src directory to the Python path
     sys.path.insert(0, current_dir)
     
+    # Ensure data directory exists
+    data_dir = os.path.join(current_dir, 'data')
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+        print(f"Created data directory at {data_dir}")
+    
+    # Check if data files exist and provide status
+    car_makes_path = os.path.join(data_dir, 'car_makes.json')
+    parts_path = os.path.join(data_dir, 'parts.json')
+    
+    if os.path.exists(car_makes_path):
+        print(f"Found car makes data at {car_makes_path}")
+    else:
+        print(f"Warning: Car makes data not found at {car_makes_path}")
+    
+    if os.path.exists(parts_path):
+        print(f"Found parts data at {parts_path}")
+    else:
+        print(f"Warning: Parts data not found at {parts_path}")
+    
     # Run the main.py script
+    print("Starting the Automotive Parts Catalog System...")
     from src.main import main
     main()
 
