@@ -3,7 +3,8 @@
 Automotive Parts Catalog System
 Main entry point for the application
 """
-from gui.main_window import MainWindow
+from .gui.main_window import MainWindow
+import tkinter as tk
 
 def main():
     """
@@ -13,8 +14,9 @@ def main():
     print("Starting application...")
     
     # Create and start the main application window
-    app = MainWindow()
-    app.mainloop()
+    root = tk.Tk()
+    app = MainWindow(root)
+    root.mainloop()
 
 if __name__ == "__main__":
     main()

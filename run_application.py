@@ -6,7 +6,8 @@ This script provides a convenient way to launch the application
 
 import os
 import sys
-import subprocess
+import tkinter as tk
+from importlib import import_module
 
 def main():
     """
@@ -39,10 +40,21 @@ def main():
     else:
         print(f"Warning: Parts data not found at {parts_path}")
     
-    # Run the main.py script
+    # Run the application
     print("Starting the Automotive Parts Catalog System...")
-    from src.main import main
-    main()
+    
+    # Create the Tkinter root window
+    root = tk.Tk()
+    root.title("Automotive Parts Catalog System")
+    root.geometry("1000x700")
+    root.minsize(800, 600)
+    
+    # Import the main window class
+    from src.gui.main_window import MainWindow
+    
+    # Create and run the main window
+    app = MainWindow(root)
+    root.mainloop()
 
 if __name__ == "__main__":
     main()
