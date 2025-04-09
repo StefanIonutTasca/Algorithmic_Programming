@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Node implementation for tree-based data structures in the Automotive Parts Catalog System.
 This class represents a node in a binary tree with generic data.
@@ -17,7 +18,7 @@ class Node(Generic[T]):
     def __init__(self, data: T):
         """
         Initialize a node with the specified data.
-        
+
         Args:
             data: The data to store in the node
         """
@@ -28,7 +29,7 @@ class Node(Generic[T]):
     def get_data(self) -> T:
         """
         Get the data stored in the node.
-        
+
         Returns:
             The data stored in the node
         """
@@ -82,16 +83,16 @@ class Node(Generic[T]):
     def is_leaf(self) -> bool:
         """
         Check if the node is a leaf (has no children).
-        
+
         Returns:
             True if the node is a leaf, False otherwise
         """
         return self._left is None and self._right is None
-    
+
     def __str__(self) -> str:
         """
         Return a string representation of the node.
-        
+
         Returns:
             A string representation of the node
         """
