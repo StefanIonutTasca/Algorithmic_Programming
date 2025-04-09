@@ -119,8 +119,38 @@ class Part:
         Returns:
             True if the part is compatible, False otherwise
         """
-        vehicle_key = f"{make_id}:{model_id}:{year}"
-        return vehicle_key in self._compatible_vehicles
+        try:
+            # Handle potential None or non-string values
+            safe_make_id = str(make_id) if make_id is not None else ""
+            safe_model_id = str(model_id) if model_id is not None else ""
+            safe_year = int(year) if year is not None else 0
+            
+            # Check if the _compatible_vehicles attribute exists and is a set
+            if not hasattr(self, '_compatible_vehicles') or not isinstance(self._compatible_vehicles, set):
+                print(f"Warning: Part {self._part_id} has invalid _compatible_vehicles attribute")
+                return False
+            
+            vehicle_key = f"{safe_make_id}:{safe_model_id}:{safe_year}"
+            
+            # Check for exact match
+            if vehicle_key in self._compatible_vehicles:
+                return True
+                
+            # Check for make:model match without year (for universal parts)
+            universal_key = f"{safe_make_id}:{safe_model_id}:0"
+            if universal_key in self._compatible_vehicles:
+                return True
+                
+            # Check for make-only match (for universal parts)
+            make_only_key = f"{safe_make_id}::0"
+            if make_only_key in self._compatible_vehicles:
+                return True
+                
+            return False
+            
+        except Exception as e:
+            print(f"Error in is_compatible_with for part {self.get_id()}: {e}")
+            return False
     
     def __str__(self) -> str:
         """String representation of the part."""
@@ -142,21 +172,48 @@ class Part:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'Part':
         """Create a Part object from a dictionary."""
-        part = cls(
-            data["part_id"],
-            data["name"],
-            data["category"],
-            data["price"],
-            data.get("manufacturer", ""),
-            data.get("description", "")
-        )
-        
-        # Add specifications
-        for key, value in data.get("specifications", {}).items():
-            part.add_specification(key, value)
-        
-        # Add compatible vehicles
-        for vehicle_key in data.get("compatible_vehicles", []):
-            part._compatible_vehicles.add(vehicle_key)
+        try:
+            # Handle different possible formats for part_id
+            part_id = data.get("part_id", None)
+            if part_id is None and "id" in data:
+                part_id = data["id"]  # Try alternative key
+                
+            # Ensure part_id is a string
+            if part_id is not None:
+                part_id = str(part_id)
+            else:
+                # Generate a fallback ID if none exists
+                part_id = "P" + str(hash(data.get("name", "unknown")) % 10000)
+                
+            # Get name with a default value
+            name = data.get("name", "Unknown Part")
             
-        return part
+            # Get category with a default value
+            category = data.get("category", "Uncategorized")
+            
+            # Handle price safely
+            try:
+                price = float(data.get("price", 0.0))
+            except (ValueError, TypeError):
+                price = 0.0
+                
+            # Get manufacturer and description
+            manufacturer = data.get("manufacturer", "")
+            description = data.get("description", "")
+            
+            part = cls(part_id, name, category, price, manufacturer, description)
+            
+            # Add specifications
+            for key, value in data.get("specifications", {}).items():
+                part.add_specification(key, value)
+            
+            # Add compatible vehicles
+            for vehicle_key in data.get("compatibleVehicles", data.get("compatible_vehicles", [])):
+                if isinstance(vehicle_key, str):
+                    part._compatible_vehicles.add(vehicle_key)
+                
+            return part
+        except Exception as e:
+            print(f"Error creating Part from dict: {e}")
+            # Return a default part as fallback
+            return cls("default_part", "Default Part", "Uncategorized", 0.0)

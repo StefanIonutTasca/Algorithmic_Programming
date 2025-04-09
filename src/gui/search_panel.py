@@ -85,8 +85,27 @@ class SearchPanel(ttk.Frame):
         Args:
             makes: List of car makes
         """
-        self._makes = makes
-        make_names = [make.get_name() for make in makes]
+        # Filter out any non-CarMake objects or lists
+        valid_makes = []
+        for make in makes:
+            if hasattr(make, 'get_name'):
+                valid_makes.append(make)
+            elif isinstance(make, list) and len(make) > 0 and hasattr(make[0], 'get_name'):
+                # If we received a list of makes, add its items individually
+                valid_makes.extend([m for m in make if hasattr(m, 'get_name')])
+            else:
+                print(f"Warning: Invalid make object encountered: {type(make)}")
+        
+        self._makes = valid_makes
+        
+        # Only process valid makes that have a get_name method
+        make_names = []
+        for make in valid_makes:
+            try:
+                make_names.append(make.get_name())
+            except Exception as e:
+                print(f"Error getting make name: {e}")
+        
         self._make_combobox["values"] = make_names
         
         # Clear other selections

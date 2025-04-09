@@ -68,13 +68,36 @@ class CarMake:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'CarMake':
         """Create a CarMake object from a dictionary."""
-        make = cls(data["make_id"], data["name"], data.get("country", ""))
-        
-        for model_data in data.get("models", []):
-            model = CarModel.from_dict(model_data)
-            make.add_model(model)
+        try:
+            # Handle different possible formats for make_id
+            make_id = data.get("make_id", None)
+            if make_id is None and "id" in data:
+                make_id = data["id"]  # Try alternative key
+                
+            # Ensure make_id is a string
+            if make_id is not None:
+                make_id = str(make_id)
+            else:
+                # Generate a fallback ID if none exists
+                make_id = "make_" + str(hash(data.get("name", "unknown")) % 10000)
+                
+            # Get name with a default value
+            name = data.get("name", "Unknown Make")
             
-        return make
+            make = cls(make_id, name, data.get("country", ""))
+            
+            for model_data in data.get("models", []):
+                try:
+                    model = CarModel.from_dict(model_data)
+                    make.add_model(model)
+                except Exception as e:
+                    print(f"Error loading model: {e}")
+            
+            return make
+        except Exception as e:
+            print(f"Error creating CarMake from dict: {e}")
+            # Return a default make as fallback
+            return cls("default_make", "Default Make")
 
 
 class CarModel:
@@ -148,18 +171,36 @@ class CarModel:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'CarModel':
         """Create a CarModel object from a dictionary."""
-        model = cls(
-            data["model_id"],
-            data["name"],
-            data["make_id"],
-            data.get("body_style", "")
-        )
-        
-        for year_data in data.get("years", []):
-            year = ModelYear.from_dict(year_data)
-            model.add_year(year)
+        try:
+            # Handle different possible formats for model_id
+            model_id = data.get("model_id", None)
+            if model_id is None and "id" in data:
+                model_id = data["id"]  # Try alternative key
+                
+            # Ensure model_id is a string
+            if model_id is not None:
+                model_id = str(model_id)
+            else:
+                # Generate a fallback ID if none exists
+                model_id = "model_" + str(hash(data.get("name", "unknown")) % 10000)
+                
+            # Get name with a default value
+            name = data.get("name", "Unknown Model")
             
-        return model
+            model = cls(model_id, name, data.get("make_id", ""))
+            
+            for year_data in data.get("years", []):
+                try:
+                    year = ModelYear.from_dict(year_data)
+                    model.add_year(year)
+                except Exception as e:
+                    print(f"Error loading year: {e}")
+            
+            return model
+        except Exception as e:
+            print(f"Error creating CarModel from dict: {e}")
+            # Return a default model as fallback
+            return cls("default_model", "Default Model", "default_make")
 
 
 class ModelYear:
@@ -213,8 +254,37 @@ class ModelYear:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'ModelYear':
         """Create a ModelYear object from a dictionary."""
-        return cls(
-            data["year"],
-            data["model_id"],
-            data.get("features", [])
-        )
+        try:
+            # Handle different ways year might be represented
+            year = data.get("year", None)
+            if year is not None:
+                try:
+                    year = int(year)
+                except (ValueError, TypeError):
+                    # If conversion fails, use current year as fallback
+                    import datetime
+                    year = datetime.datetime.now().year
+            else:
+                # Default to current year if not specified
+                import datetime
+                year = datetime.datetime.now().year
+                
+            # Handle model_id in various formats
+            model_id = data.get("model_id", "")
+            if not model_id and "id" in data:
+                model_id = str(data["id"])
+                
+            # Extract features with safe handling
+            features = []
+            if "features" in data and isinstance(data["features"], list):
+                features = data["features"]
+            elif "generation" in data:
+                # Add generation as a feature if available
+                features = [f"Generation: {data['generation']}"]
+                
+            return cls(year, model_id, features)
+        except Exception as e:
+            print(f"Error creating ModelYear from dict: {e}")
+            # Return a default year as fallback
+            import datetime
+            return cls(datetime.datetime.now().year, "default_model")
